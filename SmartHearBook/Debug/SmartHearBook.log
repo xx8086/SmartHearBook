@@ -1,10 +1,9 @@
-﻿生成启动时间为 2015/8/30 21:51:30。
+﻿生成启动时间为 2015/8/31 2:55:55。
      1>项目“E:\MyGiuHub\SmartHearBook\SmartHearBook\SmartHearBook.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\SmartHearBook.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ReadText\ReadText.cpp SmartHearBook.cpp
-         SmartHearBook.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\SmartHearBook.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ReadText\ReadText.cpp
          ReadText.cpp
-         正在生成代码...
+     1>e:\mygiuhub\smarthearbook\smarthearbook\readtext\readtext.cpp(86): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\MyGiuHub\SmartHearBook\Debug\SmartHearBook.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\MyGiuHub\SmartHearBook\Debug\SmartHearBook.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\MyGiuHub\SmartHearBook\Debug\SmartHearBook.lib" /MACHINE:X86 Debug\SmartHearBook.res
          Debug\ReadText.obj
@@ -15,4 +14,4 @@
 
 生成成功。
 
-已用时间 00:00:03.41
+已用时间 00:00:03.72

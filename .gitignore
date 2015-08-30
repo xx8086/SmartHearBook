@@ -6,6 +6,7 @@ ehthumbs.db
 *.log
 *.tlog
 *.ipch
+*.ilk
 
 # Folder config file
 Desktop.ini
