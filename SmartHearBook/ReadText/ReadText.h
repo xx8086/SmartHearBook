@@ -20,11 +20,24 @@ public:
 	bool Unit();
 	bool OpenFile(TCHAR* pFileName);
 	bool ReadText(TCHAR* pText);
-	bool SelectFile(std::wstring& wstrSelectFile);
+	bool SelectFile();
+public:
+	bool SetVolume(int iVol);//…Ë÷√“Ù¡ø0-100
+	bool GetVolume(int& iVol);
+	bool Pause(void);//‘›Õ£
+	bool Resume(void);//ª÷∏¥ 
+	bool SelectTheReader(unsigned long id);
+public:
+	bool IsReadIng();
+	std::wstring GetCurrentSelectFile();
+protected:
+
+protected:
+	std::wstring	m_wstrCurrentSelectFile;
+	bool			m_ReadIng;
 private:
-	
-private:
-	FILE*		m_pFile;
-	ISpVoice*	m_pVoice;
+	ISpVoice*		m_pVoice;
+	ISpObjectToken*	m_pSpToken;
+	unsigned long	 m_ulVoiceTypeCount;
 
 };

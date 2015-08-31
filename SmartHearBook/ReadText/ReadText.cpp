@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "ReadText.h"
+#include "..\Common\HearConfig.h"
 #include <commdlg.h>
 #include <fstream>
-
+#include <process.h>
+#include <sphelper.h>
 
 #pragma comment(lib,"ole32.lib")
 #pragma comment(lib,"sapi.lib")
@@ -10,8 +12,10 @@
 #define	ONCE_READ_WORDS		128
 
 
-CReadText::CReadText() :m_pVoice(NULL), m_pFile(NULL)
-{}
+CReadText::CReadText() :m_pVoice(NULL), m_pSpToken(NULL), m_ReadIng(false)
+{
+	m_wstrCurrentSelectFile.clear();
+}
 
 CReadText::~CReadText()
 {
@@ -24,43 +28,84 @@ bool CReadText::Init()
 		return false;
 
 	HRESULT hr = CoCreateInstance(CLSID_SpVoice, NULL, CLSCTX_ALL, IID_ISpVoice, (void **)&m_pVoice);
-	if (SUCCEEDED(hr))
-		return true;
+	if (FAILED(hr))
+		return false;
 
-	return false;
+	IEnumSpObjectTokens *cpEnum = NULL;
+	if (FAILED(SpEnumTokens(SPCAT_VOICES, NULL, NULL, &cpEnum)))
+	{
+		return false;
+	}		
+
+	cpEnum->GetCount(&m_ulVoiceTypeCount);
+	cpEnum->Release();
+	return true;
 }
 
 bool CReadText::Unit()
 {
-	if (NULL == m_pVoice)
-		return false;
+	JUDGENULL(m_pVoice, false)
 
+	if (NULL != m_pSpToken)
+	{
+		m_pSpToken->Release();
+		m_pSpToken = NULL;
+	}
+	
 	m_pVoice->Release();
 	m_pVoice = NULL;
+
 	::CoUninitialize();
 	
 	return true;
 }
 
+
 bool CReadText::ReadText(TCHAR* pText)
 {
-	if (NULL == pText || NULL == m_pVoice)
-		return false;
-
-	HRESULT hr = m_pVoice->Speak(pText, 0, NULL);;
+	JUDGENULL(pText, false)
+	JUDGENULL(m_pVoice, false)
+	HRESULT hr = m_pVoice->Speak(pText, 0, NULL);
+	
 	return true;
 }
 
+bool CReadText::SetVolume(int iVol)
+{
+	JUDGENULL(m_pVoice, false)
+	return  SUCCEEDED(m_pVoice->SetVolume(iVol));
+}
+bool CReadText::GetVolume(int& iVol)
+{
+	JUDGENULL(m_pVoice, false)
+
+	unsigned short usVol;
+	if (SUCCEEDED(m_pVoice->GetVolume(&usVol)))
+	{
+		return false;
+	}
+	
+	iVol = int(usVol);
+	return  true;
+}
+bool CReadText::Pause(void)
+{
+	JUDGENULL(m_pVoice, false)
+		return  (SUCCEEDED(m_pVoice->Pause()));
+}
+bool CReadText::Resume(void)
+{
+	JUDGENULL(m_pVoice, false)
+	return (SUCCEEDED(m_pVoice->Resume()));
+}
 bool CReadText::OpenFile(TCHAR* pFileName)
 {
-	if (NULL == pFileName)
-		return false;
+	JUDGENULL(pFileName, false)
 
 	std::wifstream in(pFileName, std::ios::in | std::ios::binary);
-	int iFileLen = in.tellg();
 	in.seekg(0, std::ios::beg);
 	in.imbue(std::locale("chs"));
-	
+
 	std::wstring wstLine;
 	while (!in.eof())
 	{
@@ -74,10 +119,19 @@ bool CReadText::OpenFile(TCHAR* pFileName)
 }
 
 
-bool CReadText::SelectFile(std::wstring& wstrSelectFile)
+bool CReadText::IsReadIng()
 {
-	wstrSelectFile.clear();
+	return m_ReadIng;
+}
 
+std::wstring CReadText::GetCurrentSelectFile()
+{
+	return m_wstrCurrentSelectFile;
+}
+
+
+bool CReadText::SelectFile()
+{
 	OPENFILENAME opfn;
 	TCHAR strFilename[MAX_PATH];
 	ZeroMemory(&opfn, sizeof(OPENFILENAME));
@@ -90,7 +144,38 @@ bool CReadText::SelectFile(std::wstring& wstrSelectFile)
 	opfn.Flags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST;
 	if (::GetOpenFileName(&opfn))
 	{
-		wstrSelectFile = strFilename;
+		m_wstrCurrentSelectFile = strFilename;
 	}
+	
+	return true;
+}
+
+bool CReadText::SelectTheReader(unsigned long id)
+{
+	JUDGETRUE((id >= m_ulVoiceTypeCount),false)
+
+	IEnumSpObjectTokens *cpEnum = NULL;
+	// 列举所有的语音token，可以通过pSpEnumTokens指向的接口得到
+	if (SUCCEEDED(SpEnumTokens(SPCAT_VOICES, NULL, NULL, &cpEnum)))
+	{
+		if (NULL != m_pSpToken)
+		{
+			m_pSpToken->Release();
+			m_pSpToken = NULL;
+		}
+		
+		while (SUCCEEDED(cpEnum->Next(1, &m_pSpToken, NULL)) && m_pSpToken != NULL)
+		{
+			if (id-- == 0)
+			{
+				m_pVoice->SetVoice(m_pSpToken);
+				break;
+			}
+			m_pSpToken->Release();//释放token
+			m_pSpToken = NULL;
+		}
+		cpEnum->Release();// 释放pSpEnumTokens接口
+	}
+
 	return true;
 }

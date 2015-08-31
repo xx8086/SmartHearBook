@@ -16,6 +16,9 @@
     <Filter Include="ReadText">
       <UniqueIdentifier>{dc9a4f02-55c5-427c-a7b1-520d71b13d12}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{0180bd9b-d2b8-40a6-8969-277c3ea33aac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -35,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="ReadText\ReadText.h">
       <Filter>ReadText</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\HearConfig.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

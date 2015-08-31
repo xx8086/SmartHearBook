@@ -131,7 +131,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	PAINTSTRUCT ps;
 	HDC hdc;
-	std::wstring wstrSelectFile;
 
 	switch (message)
 	{
@@ -146,9 +145,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDM_OPENFILE:
 			//DestroyWindow(hWnd);
-			
-			crt.SelectFile(wstrSelectFile);
-			crt.OpenFile((TCHAR*)(wstrSelectFile.c_str()));
+			crt.SelectFile();
+			crt.OpenFile((TCHAR*)crt.GetCurrentSelectFile().c_str());
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
