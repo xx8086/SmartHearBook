@@ -101,8 +101,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    hInst = hInstance; // 将实例句柄存储在全局变量中
 
-   hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+   hWnd = CreateWindow(szWindowClass, szTitle, WS_POPUP,//WS_OVERLAPPEDWINDOW,
+      50, 50, 115, 75, NULL, NULL, hInstance, NULL);
 
    if (!hWnd)
    {
@@ -140,17 +140,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// 分析菜单选择: 
 		switch (wmId)
 		{
+		case IDM_EXIT:
+			DestroyWindow(hWnd);
+			break;
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 			break;
 		case IDM_OPENFILE:
-			//DestroyWindow(hWnd);
-			crt.SelectFile();
-			crt.OpenFile((TCHAR*)crt.GetCurrentSelectFile().c_str());
+			if(crt.SelectFile())
+				crt.OpenFile((TCHAR*)crt.GetCurrentSelectFile().c_str());
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}
+		break;
+	case WM_LBUTTONDOWN:
+		SendMessage(hWnd, WM_NCLBUTTONDOWN, HTCAPTION, 0);
 		break;
 	case WM_PAINT:
 		hdc = BeginPaint(hWnd, &ps);

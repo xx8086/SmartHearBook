@@ -22,6 +22,8 @@ public:
 	bool ReadText(TCHAR* pText);
 	bool SelectFile();
 public:
+	bool SetRate(long lRate); //设置朗读速度，取值范围： - 10到10
+	bool GetRate(long* plRate);
 	bool SetVolume(int iVol);//设置音量0-100
 	bool GetVolume(int& iVol);
 	bool Pause(void);//暂停
